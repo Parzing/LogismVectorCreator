@@ -199,9 +199,9 @@ def normalize(a_list: list, length: int) -> list:
     return padding_arr + a_list
 
 
-def format_line(a_line, formatting: list) -> list:
+def line_to_integers(a_line, formatting: list) -> list:
     """
-    Returns a list of integers corresponding to the formatting
+    Returns a list of decimal integers corresponding to the formatting
     """
     formatted = []
     curr_index = 0
@@ -213,14 +213,14 @@ def format_line(a_line, formatting: list) -> list:
 
 def generic_operation(a_line: list, formatting: list) -> list:
     """ generic operation """
-    return [int(sum(format_line(a_line, formatting)) % 2 == 0)]
+    return [int(sum(line_to_integers(a_line, formatting)) % 2 == 0)]
 
 
 def binary_add(length: int):
     """ binary addition with specified line length"""
 
     def secret_function(a_line: list, formatting: list):
-        formatted = format_line(a_line, formatting)
+        formatted = line_to_integers(a_line, formatting)
         return normalize(dectobin(sum(formatted)), length)
     return secret_function
 
@@ -233,11 +233,18 @@ def global_or(a_line: list, formatting: list) -> list:
 
 
 def four_bit_addition(a_line: list, formatting: list) -> list:
-    formatted = format_line(a_line, formatting)
+    formatted = line_to_integers(a_line, formatting)
     sum_of_nums = sum(formatted)
     in_decimal = normalize(dectobin(sum_of_nums), 8)
     return in_decimal
 
+def or_xor(a_line: list, formatting: list) -> list:
+    formatted = line_to_integers(a_line, formatting)
+    first_num = normalize(dectobin(formatted[0] | formatted[1]), 4)
+    second_num = normalize(dectobin(formatted[0] ^ formatted[1]), 4)
+    return first_num + second_num
+
+
 
 if __name__ == "__main__":
-    DataObject().nbinary(8).format([4, 4]).operation(four_bit_addition).format([4, 4, 8]).show()
+    DataObject().nbinary(8).format([4, 4]).operation(or_xor).format([4, 4, 8]).show()
