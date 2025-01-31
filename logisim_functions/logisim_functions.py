@@ -66,10 +66,18 @@ class DataObject:
         Takes in an array of columns. The first list in col_array will be the first column in the table, etc.
         """
         assert (len(x) == len(col_array[0]) for x in col_array)
-
-
-
         pass
+
+    def save_to(self, file_name: str) -> Self:
+        file = open(file_name, 'w')
+        for line in self._bits_array:
+            formatting_pos = 0
+            for chunk in self._formatting:
+                file.write("".join([str(x) for x in line[formatting_pos:formatting_pos+chunk]]))
+                file.write(" ")
+                formatting_pos += chunk
+            file.write("\n")
+        return self
 
     def nbinary(self, num_vars: int) -> Self:
         """
@@ -166,11 +174,6 @@ class DataObject:
             self._formatting += [1 for _ in range(len(self._bits_array[0]) - sum(self._formatting))]
 
 
-class Operation:
-    def __init__(self, operation: str):
-        pass
-
-
 def bintodec(binary_list: list) -> int:
     """
     Takes in a binary list of 1s and 0s and turns it into a decimal number
@@ -247,4 +250,4 @@ def or_xor(a_line: list, formatting: list) -> list:
 
 
 if __name__ == "__main__":
-    DataObject().nbinary(8).format([4, 4]).operation(or_xor).format([4, 4, 8]).show()
+    DataObject().nbinary(8).format([4, 4]).save_to("twobinary.txt").show()
